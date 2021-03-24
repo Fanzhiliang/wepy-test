@@ -1,0 +1,67 @@
+<template>
+  <view class="container">
+    <view class="cart-item" v-for="(item, index) in cartList" :key="index">
+      <text>{{ item.name }} --- </text>
+      <button @click="reduce(item)">-</button>
+      <text>{{ item.number }}</text>
+      <button @click="add(item)">+</button>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from '@wepy/core';
+import store from 'store';
+import { mapState } from '@wepy/x';
+
+wepy.component({
+  store,
+
+  computed: {
+    ...mapState(['cartList'])
+  },
+
+  methods: {
+    reduce(item) {
+      const newNumber = parseInt(item.number) - 1;
+      const newGoods = Object.assign({}, item, { number: newNumber });
+
+      if (newNumber >= 1) {
+        this.$store.commit('setCart', newGoods);
+      } else {
+        this.$store.commit('deleteCart', newGoods);
+      }
+    },
+
+    add(item) {
+      this.$store.commit(
+        'setCart',
+        Object.assign({}, item, {
+          number: parseInt(item.number) + 1
+        })
+      );
+    }
+  }
+});
+</script>
+
+<style lang="less" scoped>
+.cart-item {
+  display: flex;
+  align-items: center;
+  padding-bottom: 20rpx;
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+
+  text,
+  button {
+    display: inline-block;
+  }
+}
+</style>
+
+
+
+

@@ -27,10 +27,8 @@
 </style>
 <template>
   <div class="panel">
-    <slot name="title">
-      Title
-    </slot>
-    <slot>
-    </slot>
+    <slot name="title">Title</slot>
+
+    <slot></slot>
   </div>
 </template>

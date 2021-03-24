@@ -9,7 +9,7 @@
     "minified": false,
     "newFeature": false,
     "coverView": true,
-    "nodeModules": false,
+    "nodeModules": true,
     "autoAudits": false,
     "showShadowRootInWxmlPanel": true,
     "scopeDataCheck": false,
@@ -32,13 +32,19 @@
     "useCompilerModule": true,
     "userConfirmedUseCompilerModuleSwitch": false,
     "userConfirmedBundleSwitch": false,
-    "packNpmManually": false,
-    "packNpmRelationList": [],
+    "packNpmManually": true,
+    "packNpmRelationList": [
+      {
+        "packageJsonPath": "./package.json",
+        "miniprogramNpmDistDir": "./miniprogram/"
+      }
+    ],
     "minifyWXSS": true
   },
   "compileType": "miniprogram",
   "appid": "wxaec7468b8c7b3342",
   "projectname": "wepy-test",
   "miniprogramRoot": "weapp/",
+  "libVersion": "2.16.0",
   "condition": {}
 }

@@ -1,0 +1,90 @@
+<template>
+  <view class="cart-panel">
+    <!-- <text>商品名称：</text> -->
+    <input type="text" v-model="goods.name" placeholder="商品名称" />
+    <!-- <text> 数量：</text> -->
+    <input type="number" v-model="goods.number" placeholder="数量" />
+
+    <!-- <button @click="add">添加</button> -->
+
+    <van-button round size="small" type="info" @click="add">添加</van-button>
+  </view>
+</template>
+
+<script>
+import wepy from '@wepy/core';
+import store from 'store';
+
+wepy.component({
+  store,
+
+  data: {
+    goods: {
+      name: '',
+      number: ''
+    }
+  },
+
+  computed: {
+    checkGoods() {
+      if (!this.goods.name) {
+        return '请输入商品名称';
+      } else if (isNaN(this.goods.number) || this.goods.number <= 0) {
+        return '请输入正确的数量';
+      }
+      return this.goods;
+    }
+  },
+
+  methods: {
+    resetGoods() {
+      this.goods = {
+        name: '',
+        number: ''
+      };
+    },
+    add() {
+      if (typeof this.checkGoods === 'string') {
+        wx.showModal({
+          content: this.checkGoods,
+          showCancel: false
+        });
+      } else {
+        this.$store.commit('addCart', this.checkGoods);
+        this.resetGoods();
+      }
+    }
+  }
+});
+</script>
+
+<style lang="less" scoped>
+.cart-panel {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-bottom: 1rpx solid #cccccc;
+  padding-bottom: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+input {
+  width: 200rpx;
+  display: inline-block;
+}
+
+button {
+  display: inline-block;
+  font-size: 24rpx;
+}
+</style>
+
+<config>
+{
+  usingComponents: {
+    "van-button": "module:@vant/weapp/dist/button/index"
+  }
+}
+</config>
+
+

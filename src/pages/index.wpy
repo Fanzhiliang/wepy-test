@@ -19,9 +19,19 @@ module.exports.getTime = getTime;
     </panel>
 
     <panel>
-      <view @tap="toast">
-        当前时间：{{ m1.getTime(currentTime) }}
-      </view>
+      <view slot="title">当前时间：</view>
+      {{ m1.getTime(currentTime) }}
+    </panel>
+
+    <panel>
+      <view slot="title">mixin测试：</view>
+      <view @click="mixintap">{{ mixinValue }}</view>
+    </panel>
+
+    <panel>
+      <view slot="title">vuex 购物车：</view>
+      <cart-panel></cart-panel>
+      <cart-list></cart-list>
     </panel>
 
   </div>
@@ -30,7 +40,6 @@ module.exports.getTime = getTime;
 <script>
 import wepy from '@wepy/core';
 import eventHub from '../common/eventHub';
-import { mapState } from '@wepy/x';
 import store from '../store';
 import testMixin from '../mixins/test';
 
@@ -40,11 +49,6 @@ wepy.page({
   hooks: {
     // Page 级别 hook, 只对当前 Page 的 setData 生效。
     'before-setData': function(dirty) {
-      // if (Math.random() < 0.2) {
-      //   console.log('setData canceled');
-      //   return false; // Cancel setData
-      // }
-      // dirty.time = +new Date();
       return dirty;
     }
   },
@@ -52,65 +56,40 @@ wepy.page({
   mixins: [testMixin],
 
   data: {
-    currentTime: new Date()
+    userInfo: {},
+    currentTime: null
   },
 
   computed: {
-    ...mapState(['counter']),
     testcomputed() {
       return 'computed - ' + this.mynum;
     }
   },
 
   methods: {
-    handleViewTap() {
-      console.log('handleVieTap clicked');
-    },
-    tap() {
-      // throw 'can not go here'
-    },
-    plus() {
-      this.mynum++;
-    },
-    toast() {
-      let promise = this.$invoke('toast', 'show', {
-        title: '自定义标题',
-        img:
-          'https://raw.githubusercontent.com/kiinlam/wetoast/master/images/star.png'
-      });
-
-      promise.then(d => {
-        console.log('toast done');
-      });
-    },
     mixintap() {
       console.log('do noting from ' + this.$is);
     },
     communicate() {
-      let counters = this.$children.filter(
-        com => com.$is === 'components/counter'
-      );
+      // let counters = this.$children.filter(
+      //   com => com.$is === 'components/counter'
+      // );
 
-      // Get children counter
-      counters[0].num++;
-      counters[1].num--;
+      // // Get children counter
+      // counters[0].num++;
+      // counters[1].num--;
 
       eventHub.$emit('app-launch', { a: 1 }, { b: 2 });
     }
   },
 
   created() {
-    let self = this;
-    self.currentTime = +new Date();
+    this.currentTime = +new Date();
 
-    self.setTimeoutTitle = '标题三秒后会被修改';
-    setTimeout(() => {
-      self.setTimeoutTitle = '到三秒了';
-    }, 3000);
-
+    // 获取用户信息
     wx.getUserInfo({
-      success(res) {
-        self.userInfo = res.userInfo;
+      success: res => {
+        this.userInfo = res.userInfo;
       }
     });
   }
@@ -118,9 +97,11 @@ wepy.page({
 </script>
 <config>
 {
-    navigationBarTitleText: 'WePY 2.0 Feature Demo',
+    navigationBarTitleText: 'WePY 测试',
     usingComponents: {
       "panel": "~@/components/panel",
+      "cart-list": "~@/components/cart-list",
+      "cart-panel": "~@/components/cart-panel",
       "slide-view": "module:miniprogram-slide-view",
     }
 }
