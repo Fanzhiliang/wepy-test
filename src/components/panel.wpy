@@ -1,33 +1,29 @@
 <style lang="less">
-  panel {
-    width: 100%;
-  }
-  .panel {
-    width: 100%;
-    margin-top: 20rpx;
-    text-align: left;
-    font-size: 12px;
-    padding-top: 20rpx;
-    padding-left: 50rpx;
-    padding-bottom: 20rpx;
-    border: 1px solid #ccc;
+.panel {
+  margin-top: 20rpx;
+  text-align: left;
+  font-size: 12px;
+  padding: 20rpx 30rpx;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  margin: 0 30rpx 30rpx 30rpx;
 
-    .title {
-      padding-bottom: 20rpx;
-      font-size: 14px;
-      font-weight: bold;
-    }
-    .info {
-      padding: 15rpx;
-    }
-    .testcounter {
-      margin-top: 15rpx;
-      position: absolute;
-    }
-    .counterview {
-      margin-left: 120rpx;
-    }
+  .title {
+    padding-bottom: 20rpx;
+    font-size: 14px;
+    font-weight: bold;
   }
+  .info {
+    padding: 15rpx;
+  }
+  .testcounter {
+    margin-top: 15rpx;
+    position: absolute;
+  }
+  .counterview {
+    margin-left: 120rpx;
+  }
+}
 </style>
 <template>
   <div class="panel">
