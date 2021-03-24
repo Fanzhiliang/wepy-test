@@ -1,0 +1,176 @@
+<template>
+  <view class="navbar">
+
+    <view
+      class="item"
+      v-for="(item, index) in  list"
+      :key="index"
+      :class="{
+        'active': current === index
+      }"
+      @tap="setCurrent(index)"
+    >
+      <text>{{ item.name }}</text>
+
+      <view
+        class="icon iconfont icondown"
+        v-if="item.children && item.children.length"
+        :class="{
+          'active': isShowMaskComputed
+        }"
+      ></view>
+
+      <view class="children" v-if="item.children && item.children.length && isShowMaskComputed">
+        <view
+          v-for="(it, i) in  item.children"
+          :key="i"
+          class="child"
+          :class="{
+            'active': item.current === i
+          }"
+          @tap.stop="setItemCurrent(index, i)"
+        >
+          {{ it.name }}
+        </view>
+      </view>
+    </view>
+
+    <view class="mask" v-if="isShowMaskComputed" @tap.stop="isShowMask = false"></view>
+  </view>
+</template>
+
+<script>
+import wepy from '@wepy/core'
+
+wepy.component({
+  options: {
+    addGlobalClass: true
+  },
+
+  data: {
+    list: [
+      {
+        name: '综合排序',
+        current: 0,
+        children: [
+          { name: '综合排序', id: 1 },
+          { name: '好评优先', id: 2 },
+          { name: '起送价最低', id: 3 },
+          { name: '配送最快', id: 4 },
+          { name: '配送最快', id: 5 }
+        ]
+      },
+      {
+        name: '销量最高', id: 6
+      },
+      {
+        name: '距离最近', id: 7
+      }
+    ],
+    current: 1,
+    isShowMask: false
+  },
+
+  computed: {
+    isShowMaskComputed() {
+      const item = this.list[this.current]
+      return !!(item.children && item.children.length && this.isShowMask)
+    }
+  },
+
+  methods: {
+    setCurrent(index) {
+      if (this.current === index) {
+        this.isShowMask = !this.isShowMask
+      } else {
+        this.current = index
+        this.isShowMask = true
+      }
+
+      const item = this.list[index]
+      if (item && item.id) {
+        this.$emit('selected', item.id)
+      }
+    },
+    setItemCurrent(index, i) {
+      const parent = this.list[index]
+      const children = parent.children
+      parent.current = i
+      parent.name = children[i].name
+      this.isShowMask = false
+
+      const item = children ? children[i] : undefined
+      if (item && item.id) {
+        this.$emit('selected', item.id)
+      }
+    }
+  }
+})
+</script>
+
+<style lang="less" >
+@height: 80rpx;
+@background-color: #ffffff;
+@active-color: #FF7F50;
+
+.navbar {
+  height: @height;
+  box-sizing: border-box;
+  background-color: @background-color;
+  padding: 0 40rpx;
+  display: flex;
+  align-items: center;
+
+  .item {
+    font-size: 28rpx;
+    margin-right: 30rpx;
+
+    .children {
+      background-color: @background-color;
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: @height;
+      z-index: 500;
+      padding: 10rpx 0;
+      display: none;
+      .child {
+        padding: 10rpx 40rpx;
+        color: #000;
+        &.active {
+          color: @active-color;
+        }
+      }
+    }
+
+    .icon {
+      font-size: 24rpx;
+      transition: transform linear 150ms;
+      display: inline-block;
+      margin-left: 5rpx;
+      transform-origin: center center;
+      &.active {
+        transform: rotate(180deg);
+      }
+    }
+
+    &.active {
+      color: @active-color;
+
+      .children {
+        display: block;
+      }
+    }
+  }
+
+  .mask {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: @height;
+    bottom: 0;
+    z-index: 499;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+</style>

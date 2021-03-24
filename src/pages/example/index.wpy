@@ -1,0 +1,89 @@
+<wxs module="filter" src="../../filters/index.wxs"></wxs>
+
+<template>
+  <view class="container">
+    <navbar @selected="sortChange" />
+
+    <scroll-view class="list" scroll-y scroll-with-animation>
+      <view v-for="(item, index) in 20" :key="index">
+        <view class="title" >
+          {{ msg + item }}
+        </view>
+        <view class="value" v-for="(it, i) in 10" :key="i">
+          内容{{ it }} - {{ filter.timeFilter(1616378764253) }}
+        </view>
+      </view>
+    </scroll-view>
+
+  </view>
+</template>
+
+<script>
+import wepy from '@wepy/core'
+import promisify from '@wepy/use-promisify'
+
+wepy.use(promisify)
+
+wepy.page({
+
+  data: {
+    msg: '标题'
+  },
+
+  onLoad({ name }) {
+    console.log(name)
+    wx.setStorage({
+      key: 'sb',
+      data: '我是煞笔'
+    })
+  },
+
+  methods: {
+    sortChange(id) {
+      console.log(id)
+      // wx.getStorage({
+      //   key: 'sb',
+      //   success: res => {
+      //     console.log(res)
+      //   }
+      // })
+      wepy.wx.getStorage('sb').then(res => {
+        console.log(res)
+      })
+    }
+  }
+})
+</script>
+
+<style lang="less" scoped>
+  .container {
+    height: 100vh;
+
+    .list {
+      height: calc(100vh - 80rpx);
+      .title {
+        padding: 10rpx 40rpx;
+        font-size: 32rpx;
+        font-weight: bold;
+        background-color: #FFFFFF;
+        position: sticky;
+        top: 0;
+      }
+      .value {
+        padding: 10rpx 40rpx;
+        font-size: 28rpx;
+      }
+    }
+
+  }
+</style>
+
+<config>
+{
+  "navigationBarTitleText": "example",
+  "navigationBarBackgroundColor": "#FF7F50",
+  "usingComponents": {
+    "navbar": "./components/navbar"
+  }
+}
+</config>

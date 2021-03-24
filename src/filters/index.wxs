@@ -1,0 +1,66 @@
+/* eslint-disable no-undef */
+
+// 补充字符
+function padStart(val, len, str) {
+  var _len = val.length >= len ? 0 : len - val.length
+  var result = '' + val
+
+  for (var i = 0; i < _len; i++) {
+    result = str + result
+  }
+
+  return result
+}
+
+// 解析时间戳
+function parseTime(time, cFormat) {
+  if (arguments.length === 0) {
+    return null
+  }
+  var format = cFormat || '{y}-{m}-{d} {h}:{i}:{s}'
+  var date
+  if (typeof time === 'object') {
+    date = time
+  } else {
+    var reg = getRegExp('^[0-9]+$')
+    if ((typeof time === 'string') && (reg.test(time))) {
+      time = parseInt(time)
+    }
+    if ((typeof time === 'number') && (time.toString().length === 10)) {
+      time = time * 1000
+    }
+    date = getDate(time)
+  }
+  var formatObj = {
+    y: date.getFullYear(),
+    m: date.getMonth() + 1,
+    d: date.getDate(),
+    h: date.getHours(),
+    i: date.getMinutes(),
+    s: date.getSeconds(),
+    a: date.getDay()
+  }
+  var reg2 = getRegExp('{([ymdhisa])+}', 'g')
+  var timeStr = format.replace(reg2, function (result, key) {
+    var value = formatObj[key]
+    // Note: getDay() returns 0 on Sunday
+    if (key === 'a') {
+      var tempArray = ['日', '一', '二', '三', '四', '五', '六']
+      return tempArray[value]
+    }
+    // return value.toString().padStart(2, '0')
+    return padStart(value.toString(), 2, '0')
+  })
+  return timeStr
+}
+
+// 时间戳过滤器
+function timeFilter (val) {
+  return val ? parseTime(val) : ''
+}
+
+module.exports = {
+  padStart: padStart,
+  parseTime: parseTime,
+  timeFilter: timeFilter
+}
